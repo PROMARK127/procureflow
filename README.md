@@ -10,3 +10,5 @@
 公開はGitHubリポジトリをVercelへ接続し、Neon連携と環境変数をProductionに設定して行う。接続変数として `DATABASE_URL` または `POSTGRES_URL` を使用する。マイグレーションは直接接続用変数があれば優先する。PINは十分な長さのランダム文字列を使用し、管理用に保管する。
 
 検証は `npm run typecheck`、`npm test`、`npm run build`。テスト用の埋め込みPostgreSQLはテストプロセス内でのみ使用する。設計・運用資料は `docs/` を参照。
+
+動作確認用のDBを指定した公開・ローカル環境に対して、`node --env-file=.env.local scripts/smoke.mjs <URL>` でHTTP検証を実行できる。検証用の購入申請1件を作成し、支払完了まで進める。
