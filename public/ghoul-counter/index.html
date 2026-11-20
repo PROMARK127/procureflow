@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0b1019" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>東京喰種｜実戦カウンター Web版</title>
+<style>
+:root{--bg:#0a0e16;--panel:#141b29;--panel2:#1a2333;--line:#303a4b;--ink:#eff3f9;--sub:#9facbf;--red:#f36b82;--red2:#5b1d33;--cyan:#79d7d9;--gold:#f5ce85;--green:#8de0ae;--violet:#b8a5fb}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}body{margin:0;background:radial-gradient(1000px 380px at 80% -5%,#402034 0%,transparent 55%),var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;padding-bottom:calc(94px + env(safe-area-inset-bottom));font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:active{transform:scale(.98)}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button:disabled{opacity:.35;cursor:default}input,select,textarea{background:#0d1420;color:#eef3f8;border:1px solid #3a465b;border-radius:10px;padding:12px;min-width:0;width:100%}input[type=number]{font-size:18px;font-weight:750}textarea{min-height:88px;resize:vertical}input::placeholder,textarea::placeholder{color:#75839b}
+.wrap{max-width:760px;margin:auto;padding:0 14px}header{position:sticky;top:0;z-index:10;background:rgba(9,14,22,.94);backdrop-filter:blur(16px);border-bottom:1px solid #2d3040;padding:11px 0 9px}header .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px}.eyebrow{font-size:10px;color:var(--red);font-weight:850;letter-spacing:.18em}.brand{font-size:20px;letter-spacing:.04em;font-weight:850;line-height:1.15}.brand b{color:var(--red)}.subtitle{font-size:11px;color:var(--sub);margin-top:5px}.head-actions{display:flex;gap:7px}
+.ghost,.line-btn{border:1px solid #475064;border-radius:10px;color:#e8edf5;background:#222b3a;padding:9px 10px;font-weight:750}.ghost{font-size:12px}.line-btn{background:transparent}.primary{background:linear-gradient(130deg,#e95d76,#c83b5a);color:white;border:0;border-radius:11px;padding:13px 15px;font-weight:850}.secondary{background:#283446;border:1px solid #445068;color:#ecf3ff;border-radius:11px;padding:12px 15px;font-weight:750}.small{font-size:12px;padding:7px 10px}
+main{padding-top:14px}.pane{display:none}.pane.active{display:block}section{margin-bottom:16px}.section-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 1px 10px}.section-head h2{font-size:14px;font-weight:850;letter-spacing:.03em;margin:0}.section-head small{color:var(--sub);font-size:11px}.panel{background:linear-gradient(150deg,#192231,#111925);border:1px solid #303e50;border-radius:16px;padding:14px;box-shadow:0 8px 24px #0002}.hint{color:var(--sub);font-size:12px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}.grow{flex:1}.muted{color:var(--sub)}.label{display:block;font-size:11px;color:#b2c0d2;font-weight:700;margin:0 0 5px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field-grid .field{min-width:0}.field-grid.three input{padding:10px 7px;font-size:16px}.field-grid.three .label{font-size:10px;white-space:nowrap}.full{grid-column:1/-1}
+.snap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-bottom:12px}.stat{border:1px solid #354052;border-radius:13px;background:#151e2c;padding:10px 8px;min-width:0}.stat strong{display:block;font-size:21px;line-height:1.2;white-space:nowrap}.stat small{display:block;font-size:10px;color:#acbacb;margin-top:5px}.red{color:var(--red)}.cyan{color:var(--cyan)}.gold{color:var(--gold)}.green{color:var(--green)}
+.pill{padding:5px 8px;font-size:11px;font-weight:800;background:#252f3c;color:#c6d1df;border-radius:20px}.pill.hot{background:#51253c;color:#ffc4d0}
+.group{border:1px solid #313e50;border-radius:16px;overflow:hidden;background:#111923;margin-bottom:12px}.group-header{padding:10px 13px 5px;display:flex;justify-content:space-between;align-items:center}.group-header strong{font-size:13px}.group-header small{font-size:10px;color:var(--sub)}.actions{padding:4px 10px 12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.action{border:1px solid #394759;border-radius:12px;background:linear-gradient(150deg,#263042,#202a39);color:#eef1f8;min-height:59px;font-size:12px;font-weight:850;line-height:1.2;padding:8px 3px}.action small{display:block;font-size:10px;font-weight:550;color:#a7b4c6;margin-top:5px}.action.rare{border-color:#4a425b;background:linear-gradient(160deg,#302537,#242235)}.action.cz{border-color:#355662;background:linear-gradient(150deg,#203e4a,#1c2d3a)}.action.at{border-color:#60374c;background:linear-gradient(150deg,#432637,#302432)}.action.goldish{border-color:#69563b;background:linear-gradient(150deg,#403729,#282a32)}
+.notice{border-left:3px solid #c35370;background:#241c2a;padding:10px 13px;font-size:12px;color:#e9c9d5;border-radius:0 9px 9px 0;margin-bottom:14px}.eventlog{display:flex;flex-direction:column;gap:7px}.event{background:#161f2b;border:1px solid #313e4c;border-radius:12px;padding:10px 11px;display:flex;align-items:flex-start;gap:9px;cursor:pointer}.event .time{min-width:39px;color:#8697ac;font-size:11px}.event .details{flex:1;min-width:0}.event .name{font-weight:850;font-size:13px}.event .meta{font-size:11px;color:#a1afc3;margin-top:3px;overflow-wrap:anywhere}.event .chev{color:#6e7c90}.empty{text-align:center;color:#8c9bad;padding:35px 10px;font-size:12px}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.kpi{background:#111927;border:1px solid #374458;border-radius:12px;padding:12px}.kpi b{display:block;font-size:22px}.kpi span{display:block;color:#b8c6d8;font-size:11px}.kpi small{display:block;color:#8f9eb2;font-size:10px;margin-top:4px}.table-wrap{overflow:auto}.ref-table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}.ref-table th,.ref-table td{padding:9px 7px;text-align:right;border-bottom:1px solid #303b4a}.ref-table th:first-child,.ref-table td:first-child{text-align:left}.ref-table th{color:#a1aec1;font-weight:750}.ref-table td:last-child{color:var(--cyan);font-weight:750}.mini-tags{display:flex;flex-wrap:wrap;gap:6px}.mini-tags span{border:1px solid #39485e;background:#202b3b;padding:6px 9px;border-radius:99px;font-size:11px;color:#dce4ef}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:#101723ec;backdrop-filter:blur(20px);border-top:1px solid #394253;display:flex;justify-content:space-around;padding:8px 8px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -9px 30px #0005}.tab{color:#8999b1;background:none;border:0;flex:1;max-width:160px;font-size:11px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0}.tab .ico{font-size:20px;line-height:1.2}.tab.on{color:#ff8298}
+.modal-overlay{display:none;position:fixed;inset:0;background:#020509c9;z-index:50;align-items:flex-end;justify-content:center}.modal-overlay.open{display:flex}.sheet{background:#161f2c;border:1px solid #49586d;border-bottom:0;border-radius:20px 20px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom));width:100%;max-width:760px;max-height:90dvh;overflow:auto;box-shadow:0 -20px 70px #0009}.sheet h3{font-size:17px;margin:0 0 12px}.sheet .field{margin-bottom:10px}.sheet-actions{display:flex;gap:9px;margin-top:14px}.sheet-actions button{flex:1}.close{font-size:13px;color:#c1cbdb;background:transparent;border:0;padding:5px 8px}
+.toast{position:fixed;bottom:calc(92px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);max-width:92%;min-width:200px;background:#d8f5ee;color:#102b2b;font-weight:800;font-size:12px;padding:11px 16px;text-align:center;border-radius:10px;opacity:0;pointer-events:none;z-index:90;transition:opacity .2s}.toast.show{opacity:1}
+.copy-target{position:absolute;left:-9999px;top:0}.sample{white-space:pre-wrap;word-break:break-word;font-size:11px;color:#c3cedd;background:#0b1421;border:1px solid #354157;border-radius:12px;padding:12px;max-height:260px;overflow:auto}.danger{border-color:#874554;color:#ffc7cf}
+@media(min-width:700px){.actions{grid-template-columns:repeat(4,1fr)}.action{min-height:58px}.wrap{padding:0 22px}.panel{padding:18px}.field-grid.three input{padding:12px}}@media(max-width:360px){.action{font-size:11px}.brand{font-size:18px}.stat strong{font-size:18px}.action small{font-size:9px}}
+
+/* Tap-first game counters */
+.count-panel{padding:14px}.mode-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#090f19;padding:5px;border:1px solid #354157;border-radius:13px;margin-bottom:11px}.mode-tab{border:1px solid transparent;background:transparent;color:#91a2b8;border-radius:10px;min-height:48px;font-size:14px;font-weight:850}.mode-tab.selected{background:#3b2d44;color:#fff;border-color:#95526b;box-shadow:0 2px 10px #0d0a1c}.g-display{display:flex;align-items:center;flex-direction:column;width:100%;background:linear-gradient(135deg,#192c3b,#18202e);border:1px solid #486078;border-radius:15px;color:#f3f8ff;padding:13px 10px;margin-bottom:9px}.g-display>span:first-child{font-size:12px;font-weight:850;color:#b3d0df}.g-big{line-height:1.15;display:flex;align-items:baseline;gap:5px}.g-big b{font-size:53px;letter-spacing:-.05em;font-weight:900}.g-big em{font-size:17px;font-style:normal;color:#91c6e8}.touch-hint{font-size:10px;color:#97aabd}.tap-actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.tap{background:#29384b;border:1px solid #445971;color:#f8faff;border-radius:11px;min-height:58px;font-size:16px;font-weight:900;padding:7px 1px;touch-action:manipulation}.tap.minus{background:#292333;color:#ffb6c4;border-color:#584356}.tap:active{background:#466881}.run-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px}.g-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:13px}.g-summary>div{padding:10px 3px;background:#0f1724;border:1px solid #394558;border-radius:10px;text-align:center;min-width:0}.g-summary span{display:block;color:#99a8bd;font-size:10px}.g-summary b{display:block;font-size:16px;white-space:nowrap}.g-summary>div:last-child b{color:#84dcd7}.pt-section{border-top:1px solid #354356;margin-top:14px;padding-top:13px}.pt-display{display:flex;align-items:baseline;justify-content:center;gap:5px;width:100%;background:#271f2a;border:1px solid #73526a;border-radius:12px;color:#ffcf94;margin:9px 0;padding:5px 8px}.pt-display b{font-size:37px}.pt-display span{font-size:17px;font-weight:800}.pt-display small{font-size:10px;color:#c5aaba;margin-left:7px}.amount-presets{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:7px}.amount-presets button{border:1px solid #536177;color:#f8eff3;background:#293444;border-radius:9px;padding:9px 1px;font-size:11px;font-weight:850}.keypad-sheet{max-width:480px}.keypad-value{display:flex;justify-content:center;align-items:baseline;gap:6px;background:#0d1623;border:1px solid #44566c;border-radius:12px;padding:9px}.keypad-value #keypadNumber{font-size:42px;font-weight:900}.keypad-value small{color:#92b6d4}.keypad-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:11px}.keypad-grid button{background:#2b394d;color:#f0f5fb;border:1px solid #51617a;border-radius:12px;min-height:58px;font-weight:850;font-size:23px;touch-action:manipulation}.keypad-grid button:active{background:#536781}#keypadHelp{margin:10px 0}.snap .stat small{font-size:9px}
+@media(max-width:360px){.g-summary b{font-size:13px}.tap{font-size:14px;min-height:53px}.pt-display small{font-size:9px}.g-big b{font-size:46px}}
+</style>
+</head>
+<body>
+<div id="requiresBrowser" style="position:relative;z-index:100;background:#3e1c2b;color:#fff5f6;border:2px solid #ff9eaf;padding:14px 16px;font-size:14px;line-height:1.6;text-align:center"><strong>⚠ この画面では操作できない可能性があります</strong><div>HTMLファイルのプレビューではタップ操作が動きません。Web上に公開したURLをSafariで開いてください。</div></div>
+<header><div class="wrap">
+<div><div class="eyebrow">TOKYO GHOUL / LIVE COUNTER</div><div class="brand">東京喰種 <b>実戦記録</b></div><div class="subtitle" id="sessionTitle">実戦データを読み込み中...</div></div>
+<div class="head-actions"><button class="ghost" id="undoBtn" type="button">↶ 戻す</button><button class="ghost" id="newBtn" type="button">＋ 新規</button></div>
+</div></header>
+<main class="wrap">
+<div id="pane-counter" class="pane active">
+<section>
+<div class="snap"><div class="stat"><strong class="cyan" id="statG">0</strong><small id="statGLabel">通常時 現在G</small></div><div class="stat"><strong class="gold" id="statPt">0</strong><small>液晶pt</small></div><div class="stat"><strong id="statAT">0</strong><small>AT初当たり</small></div><div class="stat"><strong class="red" id="statCZ">0</strong><small>CZ突入</small></div></div>
+<div class="panel count-panel">
+<div class="section-head"><h2>ゲーム数カウンター</h2><span class="pill hot" id="phasePill">通常</span></div>
+<div class="mode-selector" role="group" aria-label="G数の計測区間">
+<button class="mode-tab selected" data-mode="normal" type="button">通常時</button><button class="mode-tab" data-mode="cz" type="button">CZ中</button><button class="mode-tab" data-mode="at" type="button">AT中</button>
+</div>
+<button type="button" class="g-display" id="gDisplay" aria-label="現在Gを数字ボタンで設定"><span id="activeGTitle">通常時・現在G</span><span class="g-big"><b id="activeGValue">0</b><em>G</em></span><span class="touch-hint">タップで数字を直接指定 ✎</span></button>
+<div class="tap-actions" role="group" aria-label="G数を加算・修正"><button type="button" class="tap minus" data-gstep="-1">−1</button><button type="button" class="tap" data-gstep="1">+1</button><button type="button" class="tap" data-gstep="5">+5</button><button type="button" class="tap" data-gstep="10">+10</button><button type="button" class="tap" data-gstep="50">+50</button></div>
+<div class="run-controls"><button id="resetRun" class="line-btn small" type="button">この区間Gを0に</button><span class="hint">押した分だけ累計Gへ自動加算</span></div>
+<div class="g-summary" aria-label="区間別累計ゲーム数"><div><span>通常時 累計</span><b id="normalMeasured">0G</b></div><div><span>CZ 累計</span><b id="czMeasured">0G</b></div><div><span>AT 累計</span><b id="atMeasured">0G</b></div><div><span>計測合計</span><b id="totalMeasured">0G</b></div></div>
+<div class="pt-section"><div class="row between"><b>液晶ポイント</b><span class="hint">自由に修正可能</span></div>
+<button type="button" id="ptDisplay" class="pt-display" aria-label="ptを数字ボタンで設定"><b id="ptValue">0</b><span>pt</span><small>タップで数字を直接指定 ✎</small></button>
+<div class="tap-actions pt-steps"><button type="button" class="tap minus" data-ptstep="-1">−1</button><button type="button" class="tap" data-ptstep="1">+1</button><button type="button" class="tap" data-ptstep="10">+10</button><button type="button" class="tap" data-ptstep="50">+50</button><button type="button" class="tap" data-ptstep="100">+100</button></div>
+<div class="run-controls"><button type="button" id="resetPt" class="line-btn small">ptを0に戻す</button><span class="hint">ptはG累計に影響しない</span></div>
+</div>
+</div>
+</section>
+<div class="notice"><b>使い方：</b> 回したGを＋ボタンで加算。レア役や東京上空は下のボタンでその時点のG・pt・区間を自動記録。CZ突入／AT初当たり／AT終了では計測区間も自動切替。<b>「↶ 戻す」</b>で直前のタップを取り消せる。</div>
+<section><div class="group"><div class="group-header"><strong>🍒 レア役・小役</strong><small>1タップ＝1回</small></div><div class="actions">
+<button class="action rare" data-action="weak">弱チェリー</button><button class="action rare" data-action="strong">強チェリー</button><button class="action rare" data-action="watermelon">スイカ</button><button class="action rare" data-action="chance">チャンス目</button><button class="action rare" data-action="lowReplay">下段リプレイ</button><button class="action rare" data-action="kakuganReplay">赫眼リプレイ</button><button class="action rare" data-action="rareMiss">レア役示唆ハズレ</button><button class="action rare" data-action="otherRare">その他レア役</button>
+</div></div>
+<div class="group"><div class="group-header"><strong>☁️ ステージ・前兆</strong><small>移行した時に記録</small></div><div class="actions">
+<button class="action cz" data-action="sky">東京上空</button><button class="action cz" data-action="normal">通常へ戻る</button><button class="action cz" data-action="kakugan">赫眼状態</button><button class="action cz" data-action="mental">精神世界</button><button class="action cz" data-action="precursor">前兆発生</button><button class="action cz" data-action="redEyeCatch">赤アイキャッチ</button>
+</div></div>
+<div class="group"><div class="group-header"><strong>⚔️ CZ・ボーナス</strong><small>成功 / 失敗も残せる</small></div><div class="actions">
+<button class="action cz" data-action="reminiscence">レミニセンス<small>CZ突入</small></button><button class="action cz" data-action="rize">大喰いの利世<small>CZ突入</small></button><button class="action cz" data-action="czWin">CZ成功</button><button class="action cz" data-action="czLose">CZ失敗</button><button class="action cz" data-action="czRevive">CZ復活</button><button class="action cz" data-action="episode">エピソードBONUS</button>
+</div></div>
+<div class="group"><div class="group-header"><strong>🩸 AT・BITES・対決</strong><small>初当たりと継続を分ける</small></div><div class="actions">
+<button class="action at" data-action="atStart">AT初当たり</button><button class="action at" data-action="atDirect">AT直撃<small>初当たりとして集計</small></button><button class="action at" data-action="atPullback">AT引き戻し<small>別集計</small></button><button class="action at" data-action="atContinue">AT継続</button><button class="action at" data-action="bites">BITES<small>枚数入力</small></button><button class="action at" data-action="battle">喰種対決<small>相手・勝敗</small></button><button class="action at" data-action="gain">上乗せ<small>枚数入力</small></button><button class="action at" data-action="atEnd">AT終了<small>獲得枚数入力</small></button>
+</div></div>
+<div class="group"><div class="group-header"><strong>🔎 設定示唆・その他</strong><small>詳細を自由にメモ</small></div><div class="actions">
+<button class="action goldish" data-action="atScreen">AT終了画面</button><button class="action goldish" data-action="czScreen">CZ終了カード</button><button class="action goldish" data-action="invitation">月山招待状</button><button class="action goldish" data-action="trophy">トロフィー</button><button class="action goldish" data-action="edCard">EDカード</button><button class="action goldish" data-action="note">自由メモ</button>
+</div></div></section>
+<section><div class="section-head"><h2>直近の記録</h2><button class="line-btn small" data-tab="history">履歴を全部見る ↗</button></div><div class="eventlog" id="recentEvents"></div></section>
+</div>
+<div id="pane-stats" class="pane">
+<section><div class="section-head"><h2>実戦サマリー</h2><small>記録したイベントから自動集計</small></div><div class="kpi-grid" id="kpiGrid"></div></section>
+<section><div class="panel"><div class="section-head"><h2>設定差の参考比較</h2><small>通常時Gをタップ計測して算出</small></div>
+<div class="field"><label class="label" for="normalTotal">基準となる通常時G（任意・タップ計測分に加算）</label><input id="normalTotal" type="number" inputmode="numeric" min="0" placeholder="手入力の基準分、なければ空欄"/></div>
+<p class="hint">タップで計測した「通常時累計G」は自動反映。ここには計測開始前に別途把握している通常時Gだけを入力（重複入力しない）。AT・CZ中のGは分母に含めない。</p>
+<div class="table-wrap"><table class="ref-table"><thead><tr><th>判別要素</th><th>設定1</th><th>設定6</th><th>今回の記録</th></tr></thead><tbody id="refBody"></tbody></table></div>
+<p class="hint" style="margin-bottom:0">解析値：なな徹・パチマガスロマガ（2026年11月時点）。初当たりの軽さだけで設定は断定できない。サンプルが少ない場合や打ち始めから記録していない場合、比較結果には偏りがある。</p>
+</div></section>
+<section><div class="panel"><div class="section-head"><h2>役・状況ごとのカウント</h2></div><div id="countTags" class="mini-tags"></div></div></section>
+<section><div class="panel"><div class="section-head"><h2>収支メモ（任意）</h2></div><div class="field-grid"><div class="field"><label class="label" for="invest">投資（円）</label><input type="number" min="0" inputmode="numeric" id="invest" placeholder="例 17000"/></div><div class="field"><label class="label" for="coins">持ちメダル（枚）</label><input type="number" min="0" inputmode="numeric" id="coins" placeholder="例 540"/></div><div class="field"><label class="label" for="rate">1枚の換算額（円）</label><input type="number" min="1" step="0.1" inputmode="decimal" id="rate" value="20"/></div><div class="field"><label class="label">単純差額（参考）</label><div style="padding:11px;font-size:18px;font-weight:850" id="profit">—</div></div></div><p class="hint" style="margin-bottom:0">持ちメダル×換算額−投資。交換ギャップ・追加投資・貯メダル・残りの持ち玉以外は反映しない参考値。</p></div></section>
+</div>
+<div id="pane-history" class="pane"><section><div class="section-head"><h2>イベント履歴</h2><small>タップで編集・削除できる</small></div><div class="row" style="margin-bottom:10px"><select id="filterType" aria-label="イベントで絞り込み" style="flex:1"><option value="all">すべての記録</option><option value="rare">レア役・小役</option><option value="stage">ステージ・前兆</option><option value="cz">CZ・ボーナス</option><option value="at">AT・BITES</option><option value="hint">設定示唆・メモ</option></select><span id="historyCount" class="hint"></span></div><div class="eventlog" id="historyEvents"></div></section></div>
+<div id="pane-share" class="pane"><section><div class="panel"><div class="section-head"><h2>GPTに送って設定推測</h2><span class="pill hot">好きなタイミングで</span></div><p style="margin-top:0;font-size:13px">下の「分析用データをコピー」を押して、<b>このチャットに貼り付けて送信</b>するだけ。G数・pt・イベント順・当選契機・設定示唆まで一括で渡せる。</p><button id="copyReport" class="primary" style="width:100%;font-size:15px">📋 分析用データをコピー</button><div class="row" style="margin-top:9px"><button id="downloadText" class="secondary grow">テキスト保存</button><button id="downloadJson" class="secondary grow">JSONバックアップ</button></div><p class="hint" style="margin-bottom:0">自動送信はしないよ。コピーした内容を貼り付けたときだけGPT側で分析できる。詳細データは下でも確認できる。</p></div></section>
+<section><div class="panel"><div class="section-head"><h2>送信プレビュー</h2><button id="refreshPreview" class="line-btn small">更新</button></div><div id="reportPreview" class="sample"></div></div></section>
+<section><div class="panel"><div class="section-head"><h2>データ管理</h2></div><div class="row"><select id="sessionPicker" style="flex:1" aria-label="実戦を選ぶ"></select><button id="renameBtn" class="secondary small">名前変更</button></div><div class="row" style="margin-top:12px"><button id="importBtn" class="secondary grow">JSONから復元</button><button id="clearBtn" class="line-btn danger grow">この実戦を削除</button></div><input id="importFile" type="file" accept=".json,application/json" style="display:none"/><p class="hint" style="margin-bottom:0">同じブラウザ内では自動保存。以前の形式のJSONも読み込み可能。iPhoneのファイルプレビューなど保存ができない環境では、Web表示できるブラウザで開き、JSONバックアップをこまめに保存してね。</p></div></section>
+</div>
+</main>
+<nav class="bottom-nav" aria-label="画面切り替え"><button class="tab on" data-tab="counter"><span class="ico">◉</span>入力</button><button class="tab" data-tab="stats"><span class="ico">▥</span>集計</button><button class="tab" data-tab="history"><span class="ico">≡</span>履歴</button><button class="tab" data-tab="share"><span class="ico">↗</span>送る</button></nav>
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="sheet"><div class="row between"><h3 id="modalTitle">詳細の記録</h3><button class="close" type="button" id="closeModal">閉じる ✕</button></div>
+<p class="hint">イベントのG・ptは記録時の表示です。ここで修正しても現在のカウンターや累計は変わりません。</p><div class="field-grid"><div class="field"><label class="label" for="mG">記録時G</label><input type="number" id="mG" inputmode="numeric" min="0"/></div><div class="field"><label class="label" for="mPt">液晶pt</label><input type="number" id="mPt" inputmode="numeric" min="0"/></div><div class="field"><label class="label" for="mTotalG">記録時の計測合計G</label><input type="number" id="mTotalG" inputmode="numeric" min="0"/></div><div class="field"><label class="label" for="mPhase">状況</label><select id="mPhase"><option>通常</option><option>東京上空</option><option>CZ</option><option>AT</option><option>赫眼状態</option><option>精神世界</option><option>不明</option></select></div></div>
+<div class="field" style="margin-top:10px"><label class="label" for="mExtra">詳細（任意）</label><select id="mExtra"></select></div>
+<div class="field"><label class="label" for="mAmount">枚数（上乗せ・獲得時に入力）</label><input id="mAmount" type="number" inputmode="numeric" min="0" placeholder="例 200"/><div class="amount-presets"><button type="button" data-amount="50">50枚</button><button type="button" data-amount="100">100枚</button><button type="button" data-amount="200">200枚</button><button type="button" data-amount="300">300枚</button><button type="button" data-amount="500">500枚</button></div></div>
+<div class="field"><label class="label" for="mNote">追加メモ</label><textarea id="mNote" placeholder="例：赤帯、レア役否定から突入、復活、残り0枚からBITES"></textarea></div>
+<div class="sheet-actions"><button class="secondary" id="deleteEvent" type="button" style="display:none">削除</button><button class="primary" id="saveModal" type="button">記録する</button></div></div></div>
+<div class="modal-overlay" id="keypad" role="dialog" aria-modal="true" aria-labelledby="keypadTitle"><div class="sheet keypad-sheet">
+<div class="row between"><h3 id="keypadTitle">数値を入力</h3><button type="button" class="close" id="closePad">閉じる ✕</button></div>
+<div class="keypad-value"><span id="keypadNumber">0</span><small id="keypadUnit">G</small></div>
+<div class="keypad-grid"><button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button><button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button><button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button><button data-key="clear">C</button><button data-key="0">0</button><button data-key="back">⌫</button></div>
+<p id="keypadHelp" class="hint">現在Gの表示を補正します。計測済み累計には加算しません。</p><button id="applyPad" type="button" class="primary" style="width:100%">この数値に設定</button>
+</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(()=>{'use strict';
+const KEY='tokyoGhoulCounter_v1';
+const TYPES={
+weak:['弱チェリー','rare'],strong:['強チェリー','rare'],watermelon:['スイカ','rare'],chance:['チャンス目','rare'],lowReplay:['下段リプレイ','rare'],kakuganReplay:['赫眼リプレイ','rare'],rareMiss:['レア役示唆ハズレ','rare'],otherRare:['その他レア役','rare'],
+sky:['東京上空移行','stage'],normal:['通常ステージへ','stage'],kakugan:['赫眼状態突入','stage'],mental:['精神世界','stage'],precursor:['前兆発生','stage'],redEyeCatch:['赤アイキャッチ','stage'],
+reminiscence:['CZ レミニセンス','cz'],rize:['CZ 大喰いの利世','cz'],czWin:['CZ成功','cz'],czLose:['CZ失敗','cz'],czRevive:['CZ復活','cz'],episode:['エピソードBONUS','cz'],
+atStart:['AT初当たり','at'],atDirect:['AT直撃','at'],atPullback:['AT引き戻し','at'],atContinue:['AT継続','at'],bites:['BITES','at'],battle:['喰種対決','at'],gain:['上乗せ','at'],atEnd:['AT終了','at'],
+atScreen:['AT終了画面','hint'],czScreen:['CZ終了カード','hint'],invitation:['月山招待状','hint'],trophy:['トロフィー','hint'],edCard:['EDカード','hint'],note:['自由メモ','hint']
+};
+const DETAIL={sky:['不明','白','青','黄','緑','赤','虹'],precursor:['不明','弱い前兆','強い前兆','レア役示唆ハズレ'],czRevive:['復活当選','その他'],battle:['鯱：勝利','鯱：敗北','ヤモリ：勝利','ヤモリ：敗北','亜門：勝利','亜門：敗北','有馬：勝利','有馬：敗北','その他：勝利','その他：敗北'],bites:['通常BITES','超BITES'],atStart:['CZ成功経由','エピソードBONUS経由','規定ゲーム数経由','レア役経由','その他・不明'],atScreen:['金木研','亜門鋼太朗＆真戸暁','鈴屋什造＆篠原幸紀','神代利世','笛口雛実＆笛口リョーコ','ウタ＆イトリ＆四方蓮示','金木研＆霧嶋董香（金枠）','あんていく全員集合','その他・不明'],czScreen:['通常・不明','鈴屋什造','梟','有馬貴将'],invitation:['通常・不明','偶にはディナーでもどうだい？','不思議な香りだ…','君はなかなかの活字中毒らしいね','本は良いよね…','僕としたことがすまない','存分に楽しもうじゃないか','特別な夜を楽しもうじゃないか'],trophy:['銅','銀','金','キリン柄','虹','その他・不明'],edCard:['白','青','赤','金','その他・不明']};
+const POPUP=new Set(['sky','precursor','czRevive','bites','battle','gain','atEnd','atScreen','czScreen','invitation','trophy','edCard','note','atStart']);
+const SETTINGS={at:[394.4,380.5,357,325.9,291.2,261.3],cz:[262.6,255.6,246.5,233.1,216.4,203.7],rize:[2079.1,1906.5,1722.8,1478.9,1226.6,1074.9],episode:[6620.2,5879.7,5114.5,4062.5,3166.7,2639.5]};
+const MODE_LABEL={normal:'通常時',cz:'CZ中',at:'AT中'};
+const $=id=>document.getElementById(id), $$=q=>[...document.querySelectorAll(q)];
+const sid=()=>String(Date.now())+Math.random().toString(36).slice(2,7);
+const today=()=>new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
+const asNum=x=>x===''||x==null||!Number.isFinite(Number(x))?null:Number(x);
+const nonneg=x=>Math.max(0,Math.floor(Number(x)||0));
+const s=x=>x==null?'':String(x);
+const num=x=>asNum(x)==null?'—':Number(x).toLocaleString('ja-JP');
+const cleaned=x=>s(x).trim()===''?'':s(nonneg(x));
+const clone=x=>JSON.parse(JSON.stringify(x));
+const makeTracker=()=>({mode:'normal',run:{normal:0,cz:0,at:0},trackedInRun:{normal:0,cz:0,at:0},totals:{normal:0,cz:0,at:0},pt:0,baseTotal:0});
+const makeSession=()=>({id:sid(),name:`${today()} 実戦`,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),snapshot:{g:'0',pt:'0',totalG:'0',phase:'通常'},tracker:makeTracker(),normalTotal:'',invest:'',coins:'',rate:'20',events:[],undoStack:[]});
+function migrate(x){
+  if(!x.snapshot)x.snapshot={g:'',pt:'',totalG:'',phase:'通常'};
+  if(!Array.isArray(x.events))x.events=[];
+  if(!x.tracker){
+    const t=makeTracker(),ph=x.snapshot.phase;
+    t.mode=ph==='AT'?'at':ph==='CZ'?'cz':'normal';
+    t.run[t.mode]=nonneg(x.snapshot.g);
+    t.pt=nonneg(x.snapshot.pt);
+    t.baseTotal=nonneg(x.snapshot.totalG);
+    x.tracker=t;
+  }
+  for(const field of ['run','trackedInRun','totals']){
+    if(!x.tracker[field])x.tracker[field]={};
+    for(const mode of Object.keys(MODE_LABEL))x.tracker[field][mode]=nonneg(x.tracker[field][mode]);
+  }
+  if(!MODE_LABEL[x.tracker.mode])x.tracker.mode='normal';
+  x.tracker.pt=nonneg(x.tracker.pt);
+  x.tracker.baseTotal=nonneg(x.tracker.baseTotal);
+  if(!Array.isArray(x.undoStack))x.undoStack=[];
+  x.undoStack=x.undoStack.slice(-80);
+  x.normalTotal=x.normalTotal??'';
+  x.rate=x.rate??'20';
+  return x;
+}
+let storageOkay=true;
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&Array.isArray(d.sessions)&&d.sessions.length){d.sessions.forEach(migrate);return d;}}}catch(e){storageOkay=false;}const x=makeSession();return{version:2,selected:x.id,sessions:[x]};}
+let db=load(),session=migrate(db.sessions.find(x=>x.id===db.selected)||db.sessions[0]);db.selected=session.id;
+let currentTab='counter',modalType=null,modalEvent=null,padKind=null,padDigits='0',toastTimer;
+function totalMeasured(){const t=session.tracker;return t.totals.normal+t.totals.cz+t.totals.at;}
+function totalWithBase(){return session.tracker.baseTotal+totalMeasured();}
+function currentG(){const t=session.tracker;return t.run[t.mode];}
+function syncSnapshot(){const t=session.tracker;session.snapshot.g=String(currentG());session.snapshot.pt=String(t.pt);session.snapshot.totalG=String(totalWithBase());if(!session.snapshot.phase)session.snapshot.phase=MODE_LABEL[t.mode];}
+function save(){syncSnapshot();db.version=2;db.selected=session.id;session.updatedAt=new Date().toISOString();try{localStorage.setItem(KEY,JSON.stringify(db));storageOkay=true;}catch(e){storageOkay=false;}renderHeader();}
+function pushUndo(eventId=null){session.undoStack.push({tracker:clone(session.tracker),snapshot:clone(session.snapshot),eventId});if(session.undoStack.length>100)session.undoStack.shift();}
+function undo(){const operation=session.undoStack.pop();if(!operation){showToast('戻せる操作がないよ');return;}session.tracker=operation.tracker;session.snapshot=operation.snapshot;if(operation.eventId)session.events=session.events.filter(e=>e.id!==operation.eventId);save();render();showToast('直前の操作を戻したよ');}
+function showToast(message){$('toast').textContent=message;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),1800);}
+function renderHeader(){$('sessionTitle').textContent=session.name+(storageOkay?'　· 自動保存中':'　· バックアップ推奨');}
+function switchMode(mode){if(!MODE_LABEL[mode]||session.tracker.mode===mode)return;pushUndo();session.tracker.mode=mode;session.snapshot.phase=MODE_LABEL[mode];save();render();showToast(MODE_LABEL[mode]+'へ切り替え');}
+function adjustG(delta){const t=session.tracker,mode=t.mode;if(delta<0&&t.run[mode]===0)return;pushUndo();if(delta>0){t.run[mode]+=delta;t.trackedInRun[mode]+=delta;t.totals[mode]+=delta;}else{const remove=Math.min(t.run[mode],Math.abs(delta)),measuredRemove=Math.min(t.trackedInRun[mode],remove);t.run[mode]-=remove;t.trackedInRun[mode]-=measuredRemove;t.totals[mode]=Math.max(0,t.totals[mode]-measuredRemove);}save();renderCounters();if(currentTab==='stats')renderStats();}
+function adjustPt(delta){const t=session.tracker;const next=Math.max(0,t.pt+delta);if(next===t.pt)return;pushUndo();t.pt=next;save();renderCounters();}
+function resetRun(){const t=session.tracker;if(t.run[t.mode]===0)return;if(!confirm(MODE_LABEL[t.mode]+'の現在Gを0にしますか？累計Gは残ります。'))return;pushUndo();t.run[t.mode]=0;t.trackedInRun[t.mode]=0;save();renderCounters();showToast('区間Gをリセットしたよ');}
+function resetPt(){if(session.tracker.pt===0)return;pushUndo();session.tracker.pt=0;save();renderCounters();}
+function renderCounters(){const t=session.tracker;syncSnapshot();$('statG').textContent=num(currentG());$('statGLabel').textContent=MODE_LABEL[t.mode]+' 現在G';$('statPt').textContent=num(t.pt);$('activeGValue').textContent=num(currentG());$('activeGTitle').textContent=MODE_LABEL[t.mode]+'・現在G';$('ptValue').textContent=num(t.pt);$('phasePill').textContent=session.snapshot.phase;$('normalMeasured').textContent=num(t.totals.normal)+'G';$('czMeasured').textContent=num(t.totals.cz)+'G';$('atMeasured').textContent=num(t.totals.at)+'G';$('totalMeasured').textContent=num(totalMeasured())+'G';$$('[data-mode]').forEach(b=>{const selected=b.dataset.mode===t.mode;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',selected?'true':'false');});}
+function openPad(kind){padKind=kind;padDigits=String(kind==='pt'?session.tracker.pt:currentG());$('keypadNumber').textContent=padDigits;$('keypadTitle').textContent=kind==='pt'?'液晶ptを直接指定':MODE_LABEL[session.tracker.mode]+'の現在Gを指定';$('keypadUnit').textContent=kind==='pt'?'pt':'G';$('keypadHelp').textContent=kind==='pt'?'pt表示を補正します。イベントの履歴は変更されません。':'現在Gを補正します。計測済みの累計Gは変わりません。';$('keypad').classList.add('open');}
+function padKey(key){if(key==='clear')padDigits='0';else if(key==='back')padDigits=padDigits.length>1?padDigits.slice(0,-1):'0';else if(/^\d$/.test(key))padDigits=String(Math.min(9999999,Number(padDigits+key)));$('keypadNumber').textContent=padDigits;}
+function closePad(){$('keypad').classList.remove('open');padKind=null;}
+function applyPad(){if(!padKind)return;const t=session.tracker,value=nonneg(padDigits);if(padKind==='pt'){if(t.pt!==value){pushUndo();t.pt=value;}}else if(t.run[t.mode]!==value){pushUndo();t.run[t.mode]=value;t.trackedInRun[t.mode]=0;}save();renderCounters();closePad();showToast('数値をセットしたよ');}
+function transition(type){const t=session.tracker;
+  if(['sky','normal','kakugan','mental'].includes(type)){t.mode='normal';session.snapshot.phase=({sky:'東京上空',normal:'通常',kakugan:'赫眼状態',mental:'精神世界'})[type];}
+  else if(type==='reminiscence'||type==='rize'){t.mode='cz';t.run.cz=0;t.trackedInRun.cz=0;session.snapshot.phase='CZ';}
+  else if(type==='czLose'){t.mode='normal';session.snapshot.phase='通常';}
+  else if(['atStart','atDirect','atPullback'].includes(type)){t.mode='at';t.run.at=0;t.trackedInRun.at=0;session.snapshot.phase='AT';}
+  else if(type==='atEnd'){t.mode='normal';t.run.normal=0;t.trackedInRun.normal=0;session.snapshot.phase='通常';}
+  else if(['bites','battle','gain','atContinue'].includes(type)){if(t.mode!=='at'){t.mode='at';session.snapshot.phase='AT';}}
+}
+function addEvent(type,options={}){if(!TYPES[type])return;const t=session.tracker,id=sid();pushUndo(id);
+  const pick=(key,fallback)=>Object.prototype.hasOwnProperty.call(options,key)?options[key]:fallback;
+  const ev={id,type,time:new Date().toISOString(),g:cleaned(pick('g',currentG())),pt:cleaned(pick('pt',t.pt)),totalG:cleaned(pick('totalG',totalWithBase())),mode:t.mode,runG:currentG(),normalRunG:t.run.normal,czRunG:t.run.cz,atRunG:t.run.at,phase:pick('phase',session.snapshot.phase),extra:pick('extra',''),amount:cleaned(pick('amount','')),note:pick('note','')};
+  session.events.push(ev);transition(type);save();render();showToast('✓ '+TYPES[type][0]+'を記録');
+}
+function counts(){const c=Object.fromEntries(Object.keys(TYPES).map(k=>[k,0]));for(const e of session.events)if(Object.prototype.hasOwnProperty.call(c,e.type))c[e.type]++;return c;}
+function makeEventNode(e){const el=document.createElement('div');el.className='event';const stamp=new Date(e.time);const tm=Number.isFinite(stamp.getTime())?stamp.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'}):'--:--';const desc=[e.mode&&MODE_LABEL[e.mode]?'【'+MODE_LABEL[e.mode]+'】':null,e.g!==''?'G:'+e.g:null,e.pt!==''?'pt:'+e.pt:null,e.totalG!==''?'計'+e.totalG+'G':null,e.extra||null,e.amount!==''?e.amount+'枚':null,e.note||null].filter(Boolean).join(' · ');const time=document.createElement('div');time.className='time';time.textContent=tm;const details=document.createElement('div');details.className='details';const title=document.createElement('div');title.className='name';title.textContent=TYPES[e.type]?.[0]||e.type;const meta=document.createElement('div');meta.className='meta';meta.textContent=desc||'詳細なし';details.append(title,meta);const ch=document.createElement('span');ch.className='chev';ch.textContent='›';el.append(time,details,ch);el.addEventListener('click',()=>openModal(e.type,e));return el;}
+function fillEvents(id,events){const el=$(id);el.replaceChildren();if(!events.length){const empty=document.createElement('div');empty.className='empty';empty.textContent='まだ記録がないよ。入力画面からタップして追加しよう。';el.append(empty);return;}for(const e of events)el.append(makeEventNode(e));}
+function renderHistory(){fillEvents('recentEvents',session.events.slice(-5).reverse());const f=$('filterType').value;const arr=session.events.filter(e=>f==='all'||TYPES[e.type]?.[1]===f).slice().reverse();fillEvents('historyEvents',arr);$('historyCount').textContent=arr.length+'件';}
+function normalG(){const base=asNum(session.normalTotal)||0,tracked=session.tracker.totals.normal;return base+tracked>0?base+tracked:null;}
+function rateCell(key,count){const g=normalG();if(g==null)return'—';return count>0?'1/'+(g/count).toFixed(1):'0回';}
+function makeKpi(name,value,foot){const div=document.createElement('div');div.className='kpi';const nm=document.createElement('span');nm.textContent=name;const val=document.createElement('b');val.textContent=value;const sm=document.createElement('small');sm.textContent=foot;div.append(nm,val,sm);return div;}
+function money(){const i=asNum(session.invest),c=asNum(session.coins),r=asNum(session.rate);return i!=null&&c!=null&&r!=null?Math.round(c*r-i):null;}
+function renderStats(){const c=counts(),at=c.atStart+c.atDirect,cz=c.reminiscence+c.rize,t=session.tracker,g=$('kpiGrid');g.replaceChildren();[
+['通常時 計測G',num(t.totals.normal)+'G','基準Gとは別のタップ計測分'],['AT中 計測G',num(t.totals.at)+'G','AT中のGは初当たり分母に含めない'],['CZ中 計測G',num(t.totals.cz)+'G','通常Gから分離'],['計測合計',num(totalMeasured())+'G','通常＋CZ＋AT'],
+['AT初当たり',at+'回','引き戻しは別カウント'],['CZ突入',cz+'回','レミニセンス '+c.reminiscence+' / 利世 '+c.rize],['CZ成功',c.czWin+'回','復活 '+c.czRevive+'回'],['AT引き戻し',c.atPullback+'回','AT終了 '+c.atEnd+'回'],['エピソード',c.episode+'回','設定推測で重要'],['下段リプレイ',c.lowReplay+'回','赫眼リプレイ '+c.kakuganReplay+'回'],['東京上空',c.sky+'回','通常へ戻る '+c.normal+'回'],['BITES',c.bites+'回','上乗せイベント '+c.gain+'回']].forEach(x=>g.append(makeKpi(...x)));
+$('statAT').textContent=at;$('statCZ').textContent=cz;const body=$('refBody');body.replaceChildren();for(const[label,key,value]of[['AT初当たり','at',at],['CZ合算','cz',cz],['大喰いの利世','rize',c.rize],['エピソードBONUS','episode',c.episode]]){const tr=document.createElement('tr');for(const cell of [label,'1/'+SETTINGS[key][0],'1/'+SETTINGS[key][5],rateCell(key,value)]){const td=document.createElement('td');td.textContent=cell;tr.append(td);}body.append(tr);}
+const tags=$('countTags');tags.replaceChildren();for(const [key,values] of Object.entries(TYPES)){if(!c[key])continue;const badge=document.createElement('span');badge.textContent=values[0]+' '+c[key];tags.append(badge);}if(!tags.children.length)tags.textContent='記録を始めるとここに回数が出るよ。';const m=money();$('profit').textContent=m===null?'—':(m>0?'+':'')+num(m)+'円';$('profit').style.color=m===null?'#f1f5f9':m>=0?'#8de0ae':'#f38da0';}
+function renderPicker(){const picker=$('sessionPicker');picker.replaceChildren();for(const x of db.sessions){const opt=document.createElement('option');opt.value=x.id;opt.textContent=x.name;picker.append(opt);}picker.value=session.id;}
+function syncFields(){$('normalTotal').value=session.normalTotal||'';$('invest').value=session.invest||'';$('coins').value=session.coins||'';$('rate').value=session.rate||'20';}
+function render(){renderHeader();renderCounters();renderStats();renderHistory();renderPicker();if(currentTab==='share')renderPreview();}
+function switchTab(name){currentTab=name;$$('.pane').forEach(p=>p.classList.toggle('active',p.id==='pane-'+name));$$('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));if(name==='stats')renderStats();if(name==='share')renderPreview();if(name==='history')renderHistory();window.scrollTo({top:0,behavior:'instant'});}
+function modalOptions(type,selected){const sel=$('mExtra');sel.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent='選択なし／下に自由入力';sel.append(blank);const opts=DETAIL[type]||[];for(const value of opts){const opt=document.createElement('option');opt.value=value;opt.textContent=value;sel.append(opt);}if(selected&&!opts.includes(selected)){const opt=document.createElement('option');opt.value=selected;opt.textContent=selected;sel.append(opt);}sel.value=selected||'';}
+function openModal(type,existing=null){modalType=type;modalEvent=existing;$('modalTitle').textContent=(existing?'記録を編集：':'記録：')+(TYPES[type]?.[0]||type);const t=session.tracker;const data=existing||{g:currentG(),pt:t.pt,totalG:totalWithBase(),phase:session.snapshot.phase,extra:'',amount:'',note:''};$('mG').value=s(data.g);$('mPt').value=s(data.pt);$('mTotalG').value=s(data.totalG);$('mPhase').value=data.phase||session.snapshot.phase||'通常';modalOptions(type,data.extra);$('mAmount').value=s(data.amount);$('mNote').value=data.note||'';$('deleteEvent').style.display=existing?'block':'none';$('saveModal').textContent=existing?'変更を保存':'記録する';$('modal').classList.add('open');}
+function closeModal(){$('modal').classList.remove('open');modalEvent=null;modalType=null;}
+function submitModal(){const obj={g:cleaned($('mG').value),pt:cleaned($('mPt').value),totalG:cleaned($('mTotalG').value),phase:$('mPhase').value,extra:$('mExtra').value,amount:cleaned($('mAmount').value),note:$('mNote').value.trim()};if(modalEvent){Object.assign(modalEvent,obj);save();render();showToast('変更を保存したよ');}else addEvent(modalType,obj);closeModal();}
+function deleteEvent(){if(!modalEvent)return;if(!confirm('この記録を削除しますか？ G数の計測値は変わりません。'))return;session.events=session.events.filter(x=>x.id!==modalEvent.id);save();render();closeModal();showToast('記録を削除したよ');}
+function textReport(){const c=counts(),at=c.atStart+c.atDirect,cz=c.reminiscence+c.rize,t=session.tracker;const normal=normalG();const group={normal:{},cz:{},at:{},unknown:{}};
+for(const e of session.events){const key=MODE_LABEL[e.mode]?e.mode:'unknown';group[key][e.type]=(group[key][e.type]||0)+1;}
+const lines=[
+'【L東京喰種｜実戦カウンター v2 分析用】',`実戦名：${session.name}`,'※記録開始前の履歴は自動追加していません。各区間の計測開始時点に注意。',
+`現在：${MODE_LABEL[t.mode]} / 現在${currentG()}G / 液晶${t.pt}pt / 表示状況${session.snapshot.phase}`,
+`区間別累計（＋ボタン計測）：通常時 ${t.totals.normal}G、CZ ${t.totals.cz}G、AT ${t.totals.at}G、合計 ${totalMeasured()}G`,
+`基準の通常G（手入力）：${num(session.normalTotal)} / 設定推測用通常G：${normal==null?'未計測':num(normal)}G`,
+`参考・入力の総G基準：${t.baseTotal}G、基準を含む総G：${totalWithBase()}G（実機データと一致するとは限らない）`,
+`投資：${num(session.invest)}円、持ちメダル：${num(session.coins)}枚、換算：${num(session.rate)}円/枚、単純差額：${money()===null?'—':money()+'円'}`,
+'', '■ 集計',`AT初当たり ${at}回（通常AT ${c.atStart}、直撃 ${c.atDirect}、引き戻し別 ${c.atPullback}）`,`CZ突入 ${cz}回（レミニセンス ${c.reminiscence}、大喰いの利世 ${c.rize}）、成功 ${c.czWin}、失敗 ${c.czLose}、復活 ${c.czRevive}`,
+`エピソードBONUS ${c.episode}回、BITES ${c.bites}回、AT継続 ${c.atContinue}回、AT終了 ${c.atEnd}回、東京上空 ${c.sky}回`,
+`レア役：弱チェ ${c.weak}、強チェ ${c.strong}、スイカ ${c.watermelon}、チャンス目 ${c.chance}、下段リプレイ ${c.lowReplay}、赫眼リプレイ ${c.kakuganReplay}、示唆ハズレ ${c.rareMiss}`,
+`実測AT初当たり ${rateCell('at',at)}、CZ合算 ${rateCell('cz',cz)}、利世 ${rateCell('rize',c.rize)}、エピボ ${rateCell('episode',c.episode)}`,
+'', '■ 区間ごとのレア役回数',...['normal','cz','at','unknown'].map(mode=>`${MODE_LABEL[mode]||'区間不明'}：`+['weak','strong','watermelon','chance','lowReplay','kakuganReplay','rareMiss'].map(k=>TYPES[k][0]+':'+(group[mode][k]||0)).join('、')),
+'', '■ 時系列イベント（イベント時点のG・pt・計測区間）'];
+if(!session.events.length)lines.push('まだ記録なし');
+for(let i=0;i<session.events.length;i++){const e=session.events[i];const d=new Date(e.time);const stamp=Number.isFinite(d.getTime())?d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'}):'不明';lines.push(`${i+1}. ${stamp} ${TYPES[e.type]?.[0]||e.type}｜${MODE_LABEL[e.mode]||'区間不明'}｜${num(e.g)}G / ${num(e.pt)}pt / 計測総${num(e.totalG)}G｜表示:${e.phase||'—'}${e.extra?'｜詳細:'+e.extra:''}${e.amount!==''?'｜'+e.amount+'枚':''}${e.note?'｜メモ:'+e.note:''}`);}
+lines.push('','■ 分析依頼','通常・CZ・ATのゲーム数を区別し、設定1〜6の解析値とAT初当たり/CZ/エピソード等を比較してください。区間外・計測前の当選は自動的に補完しないでください。統計サンプルが少なければ断定を避け、判断できる要素と不明な要素を分けて、次に記録すべき項目も挙げてください。過去のG数の手入力による補正は計測累計に含まれません。');return lines.join('\n');}
+function renderPreview(){$('reportPreview').textContent=textReport();}
+async function copyReport(){const text=textReport();try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);showToast('コピー完了！このチャットに貼り付けてね');return;}}catch(e){}const box=document.createElement('textarea');box.className='copy-target';box.value=text;document.body.append(box);box.select();let copied=false;try{copied=document.execCommand('copy');}catch(e){}box.remove();if(copied)showToast('コピー完了！チャットへ貼り付けてね');else{switchTab('share');const rng=document.createRange();rng.selectNodeContents($('reportPreview'));getSelection().removeAllRanges();getSelection().addRange(rng);showToast('テキストを選択したよ。長押しでコピーしてね');}}
+function download(filename,contents,type){const blob=new Blob([contents],{type});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+function fileName(ext){return 'tokyo-ghoul-'+new Date().toLocaleDateString('sv-SE')+'.'+ext;}
+function newSession(){const name=prompt('新しい実戦名（例：11/20 東京喰種 517番台）',today()+' 東京喰種');if(name===null)return;const x=makeSession();x.name=name.trim()||x.name;db.sessions.push(x);session=x;db.selected=x.id;save();syncFields();render();switchTab('counter');showToast('新しい実戦を作成したよ');}
+function switchSession(id){const found=db.sessions.find(x=>x.id===id);if(!found)return;session=migrate(found);db.selected=session.id;save();syncFields();render();switchTab('counter');}
+function rename(){const name=prompt('この実戦の名前',session.name);if(name===null)return;session.name=name.trim()||session.name;save();render();}
+function clearSession(){if(!confirm('この実戦と記録をすべて削除します。元に戻せません。先にJSONを保存してね。'))return;db.sessions=db.sessions.filter(x=>x.id!==session.id);if(!db.sessions.length)db.sessions.push(makeSession());session=migrate(db.sessions.at(-1));db.selected=session.id;save();syncFields();render();switchTab('counter');showToast('実戦を削除したよ');}
+function setup(){render();syncFields();
+  $$('[data-action]').forEach(b=>b.addEventListener('click',()=>{const type=b.dataset.action;POPUP.has(type)?openModal(type):addEvent(type);}));
+  $$('[data-tab]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+  $$('[data-mode]').forEach(b=>b.addEventListener('click',()=>switchMode(b.dataset.mode)));
+  $$('[data-gstep]').forEach(b=>b.addEventListener('click',()=>adjustG(Number(b.dataset.gstep))));
+  $$('[data-ptstep]').forEach(b=>b.addEventListener('click',()=>adjustPt(Number(b.dataset.ptstep))));
+  $('gDisplay').addEventListener('click',()=>openPad('g'));
+  $('ptDisplay').addEventListener('click',()=>openPad('pt'));
+  $('resetRun').addEventListener('click',resetRun);
+  $('resetPt').addEventListener('click',resetPt);
+  $('closePad').addEventListener('click',closePad);
+  $('keypad').addEventListener('click',event=>{if(event.target===$('keypad'))closePad();});
+  $$('[data-key]').forEach(b=>b.addEventListener('click',()=>padKey(b.dataset.key)));
+  $('applyPad').addEventListener('click',applyPad);
+  $('undoBtn').addEventListener('click',undo);
+  $('newBtn').addEventListener('click',newSession);
+  $('closeModal').addEventListener('click',closeModal);
+  $('modal').addEventListener('click',event=>{if(event.target===$('modal'))closeModal();});
+  $('saveModal').addEventListener('click',submitModal);
+  $('deleteEvent').addEventListener('click',deleteEvent);
+  $$('[data-amount]').forEach(b=>b.addEventListener('click',()=>{$('mAmount').value=b.dataset.amount;}));
+  $('filterType').addEventListener('change',renderHistory);
+  for(const id of ['normalTotal','invest','coins','rate'])$(id).addEventListener('change',()=>{session[id]=cleaned($(id).value);save();renderStats();if(currentTab==='share')renderPreview();});
+  $('copyReport').addEventListener('click',copyReport);
+  $('refreshPreview').addEventListener('click',renderPreview);
+  $('downloadText').addEventListener('click',()=>download(fileName('txt'),textReport(),'text/plain;charset=utf-8'));
+  $('downloadJson').addEventListener('click',()=>download(fileName('json'),JSON.stringify(db,null,2),'application/json;charset=utf-8'));
+  $('sessionPicker').addEventListener('change',event=>switchSession(event.target.value));
+  $('renameBtn').addEventListener('click',rename);
+  $('clearBtn').addEventListener('click',clearSession);
+  $('importBtn').addEventListener('click',()=>$('importFile').click());
+  $('importFile').addEventListener('change',async event=>{const f=event.target.files?.[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!obj||!Array.isArray(obj.sessions)||!obj.sessions.length||!obj.sessions.every(x=>x&&x.id&&Array.isArray(x.events)&&x.snapshot))throw Error('保存形式が不正です');if(!confirm('JSONのデータで現在の全実戦データを置き換えます。よろしいですか？'))return;obj.sessions.forEach(migrate);db=obj;session=db.sessions.find(x=>x.id===db.selected)||db.sessions[0];save();syncFields();render();switchTab('counter');showToast('バックアップから復元したよ');}catch(err){alert('読み込みに失敗：'+err.message);}finally{event.target.value='';}});
+  window.addEventListener('keydown',event=>{if(event.key==='Escape'){closePad();closeModal();}});
+  if(!storageOkay)showToast('自動保存できません。JSONを保存してね');
+}
+setup();
+const browserNotice=document.getElementById('requiresBrowser');if(browserNotice)browserNotice.remove();
+})();
+</script>
+</body>
+</html>
